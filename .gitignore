@@ -1,0 +1,4 @@
+wdtt-server
+wdtt-server-arm64
+*.exe
+.DS_Store
