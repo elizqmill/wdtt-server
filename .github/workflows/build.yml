@@ -1,10 +1,13 @@
-name: Build and Deploy
+name: Build and Release
 
 on:
   push:
     branches: [main]
     tags: ['v*']
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -37,47 +40,17 @@ jobs:
           files: |
             wdtt-server
             wdtt-server-arm64
+          body: |
+            ## wdtt-server v${{ github.ref_name }}
 
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v4
-        with:
-          name: binaries
+            ### Изменения
+            ${{ github.event.head_commit.message || 'Автоматическая сборка' }}
 
-      - name: Deploy to VPS
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_PORT || '22' }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            set -e
-            install -m 0755 /dev/stdin /usr/local/bin/wdtt-server < /dev/null || true
-            echo "Binary will be uploaded via scp next"
-      - name: Upload binary via SCP
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_PORT || '22' }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          source: wdtt-server
-          target: /tmp/
+            ### Установка
+            ```bash
+            install -m 0755 wdtt-server /usr/local/bin/wdtt-server
+            systemctl restart wdtt
+            ```
 
-      - name: Restart service
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.VPS_HOST }}
-          port: ${{ secrets.VPS_PORT || '22' }}
-          username: ${{ secrets.VPS_USER }}
-          key: ${{ secrets.VPS_SSH_KEY }}
-          script: |
-            install -m 0755 /tmp/wdtt-server /usr/local/bin/wdtt-server
-            systemctl daemon-reload
-            systemctl restart wdtt || true
-            sleep 2
-            systemctl status wdtt --no-pager || journalctl -u wdtt -n 10 --no-pager
+            ### Обновление через приложение
+            Откройте WDTT → Деплой → кнопка **Обновить сервер**
