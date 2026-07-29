@@ -27,7 +27,7 @@ type PasswordEntry struct {
 	ExpiresAt     int64  `json:"expires_at"`
 	DownBytes     int64  `json:"down_bytes"`
 	UpBytes       int64  `json:"up_bytes"`
-	VkHash        string `json:"vk_hash,omitempty"`
+	CallHash      string `json:"call_hash,omitempty"`
 	Ports         string `json:"ports,omitempty"`
 	IsDeactivated bool   `json:"is_deactivated,omitempty"`
 }

@@ -67,16 +67,6 @@ func getPublicIP() string {
 	return publicIP
 }
 
-func stripVkUrl(url string) string {
-	url = strings.TrimSpace(url)
-	if idx := strings.LastIndex(url, "/"); idx != -1 {
-		url = url[idx+1:]
-	}
-	if idx := strings.Index(url, "?"); idx != -1 {
-		url = url[:idx]
-	}
-	return strings.TrimSpace(url)
-}
 
 type wrapKeyEntry struct {
 	id  string
@@ -405,13 +395,13 @@ func botLoop(token string, adminIDstr string, wgDev *device.Device) {
 						continue
 					}
 					txt := fmt.Sprintf("🔑 *Пароль:* `%s`\n", pass)
-					if entry.VkHash != "" {
+					if entry.CallHash != "" {
 						pts := strings.Split(entry.Ports, ",")
 						if len(pts) < 3 {
 							pts = []string{"56000", "56001", "9000"}
 						}
 						srvIP := getPublicIP()
-						link := fmt.Sprintf("wdtt://%s:%s:%s:%s:%s:%s", srvIP, pts[0], pts[1], pts[2], pass, entry.VkHash)
+						link := fmt.Sprintf("wdtt://%s:%s:%s:%s:%s:%s", srvIP, pts[0], pts[1], pts[2], pass, entry.CallHash)
 						txt += fmt.Sprintf("🔗 *Быстрая ссылка:* `%s`\n", link)
 					}
 					if entry.IsDeactivated {
@@ -574,7 +564,7 @@ func botLoop(token string, adminIDstr string, wgDev *device.Device) {
 				} else if data == "ports_def" {
 					tempPorts = "56000,56001,9000"
 					waitingForHash = true
-					sendTelegram(token, adminID, "🔑 Укажите VK хеш (или несколько через запятую):", nil)
+					sendTelegram(token, adminID, "🔑 Укажите хеш звонка (или несколько через запятую):", nil)
 				} else if data == "ports_custom" {
 					waitingForPorts = true
 					sendTelegram(token, adminID, "⚙️ Укажите через запятую 3 порта (DTLS,WG,TUN):\nНапример: 56000,56001,9000", nil)
@@ -632,7 +622,7 @@ func botLoop(token string, adminIDstr string, wgDev *device.Device) {
 				waitingForPorts = false
 				tempPorts = fmt.Sprintf("%s,%s,%s", p1, p2, p3)
 				waitingForHash = true
-				sendTelegram(token, adminID, "🔑 Укажите VK хеш (или несколько через запятую):", nil)
+				sendTelegram(token, adminID, "🔑 Укажите хеш звонка (или несколько через запятую):", nil)
 				continue
 			}
 
@@ -687,7 +677,7 @@ func botLoop(token string, adminIDstr string, wgDev *device.Device) {
 				expiresAt := time.Now().Add(time.Duration(tempDays) * 24 * time.Hour).Unix()
 				db.Passwords[newPass] = &PasswordEntry{
 					ExpiresAt: expiresAt,
-					VkHash:    hash,
+					CallHash:  hash,
 					Ports:     tempPorts,
 				}
 				saveDBLazy()
