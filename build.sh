@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-APP=wdtt-server
+APP=maxtunnel-server
 VERSION=$(git describe --tags --always 2>/dev/null || echo "dev")
 LDFLAGS="-ldflags=-s -w -X main.version=$VERSION"
 

@@ -20,37 +20,37 @@ jobs:
           go-version: '1.25'
 
       - name: Build (amd64)
-        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o wdtt-server .
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w" -o maxtunnel-server .
 
       - name: Build (arm64)
-        run: CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o wdtt-server-arm64 .
+        run: CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -ldflags="-s -w" -o maxtunnel-server-arm64 .
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: binaries
           path: |
-            wdtt-server
-            wdtt-server-arm64
+            maxtunnel-server
+            maxtunnel-server-arm64
 
       - name: Create release
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            wdtt-server
-            wdtt-server-arm64
+            maxtunnel-server
+            maxtunnel-server-arm64
           body: |
-            ## wdtt-server v${{ github.ref_name }}
+            ## maxtunnel-server v${{ github.ref_name }}
 
             ### Изменения
             ${{ github.event.head_commit.message || 'Автоматическая сборка' }}
 
             ### Установка
             ```bash
-            install -m 0755 wdtt-server /usr/local/bin/wdtt-server
-            systemctl restart wdtt
+            install -m 0755 maxtunnel-server /usr/local/bin/maxtunnel-server
+            systemctl restart maxtunnel
             ```
 
             ### Обновление через приложение
-            Откройте WDTT → Деплой → кнопка **Обновить сервер**
+            Откройте MaxTunnel → Деплой → кнопка **Обновить сервер**

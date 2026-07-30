@@ -1,6 +1,6 @@
-# WDTT VPN Server
+# MaxTunnel VPN Server
 
-Ядро сервера для WDTT — VPN-туннеля поверх DTLS + TURN relay с обфускацией под RTP (audio/video/datachannel).
+Ядро сервера для MaxTunnel — VPN-туннеля поверх DTLS + TURN relay с обфускацией под RTP (audio/video/datachannel).
 
 ## Возможности
 
@@ -28,20 +28,20 @@ make build-arm64
 make build-amd64
 
 # Или скачать с релизов
-wget https://github.com/elizqmill/wdtt-server/releases/latest/download/wdtt-server
-chmod +x wdtt-server
+wget https://github.com/elizqmill/maxtunnel-server/releases/latest/download/maxtunnel-server
+chmod +x maxtunnel-server
 
 # Запустить
-./wdtt-server -listen 0.0.0.0:56000 -wg-port 56001 -config-dir /etc/wdtt -password YOUR_MASTER_PASSWORD
+./maxtunnel-server -listen 0.0.0.0:56000 -wg-port 56001 -config-dir /etc/maxtunnel -password YOUR_MASTER_PASSWORD
 ```
 
 ### Systemd (рекомендуется)
 
 ```bash
-install -m 0755 wdtt-server /usr/local/bin/wdtt-server
-install -m 0644 wdtt.service /etc/systemd/system/
+install -m 0755 maxtunnel-server /usr/local/bin/maxtunnel-server
+install -m 0644 maxtunnel.service /etc/systemd/system/
 systemctl daemon-reload
-systemctl enable --now wdtt
+systemctl enable --now maxtunnel
 ```
 
 ## Параметры
@@ -50,7 +50,7 @@ systemctl enable --now wdtt
 |------|----------|-------------|
 | `-listen` | Адрес DTLS | `0.0.0.0:56000` |
 | `-wg-port` | Порт WireGuard | `56001` |
-| `-config-dir` | Директория конфигурации | `/etc/wdtt` |
+| `-config-dir` | Директория конфигурации | `/etc/maxtunnel` |
 | `-password` | Пароль владельца | — |
 | `-admin` | Telegram Admin ID | — |
 | `-bot-token` | Telegram Bot Token | — |
@@ -60,7 +60,7 @@ systemctl enable --now wdtt
 
 ```bash
 # Через deploy.sh (без потери конфига)
-./deploy.sh user@host ./wdtt-server
+./deploy.sh user@host ./maxtunnel-server
 ```
 
 Или через Android-приложение: кнопка **Обновить сервер** в разделе деплоя.

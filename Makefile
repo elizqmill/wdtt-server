@@ -1,6 +1,6 @@
 .PHONY: all clean
 
-APP=wdtt-server
+APP=maxtunnel-server
 VERSION=$(shell git describe --tags --always 2>/dev/null || echo "dev")
 LDFLAGS=-ldflags="-s -w -X main.version=$(VERSION)"
 

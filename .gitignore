@@ -1,4 +1,4 @@
-wdtt-server
-wdtt-server-arm64
+maxtunnel-server
+maxtunnel-server-arm64
 *.exe
 .DS_Store

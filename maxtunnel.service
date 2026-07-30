@@ -1,0 +1,16 @@
+[Unit]
+Description=MaxTunnel VPN Server
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=-/usr/bin/env bash -c "ip link show maxtunnel0 >/dev/null 2>&1 && ip link del maxtunnel0 2>/dev/null || true"
+ExecStartPre=-/usr/bin/env bash -c "if command -v iptables >/dev/null 2>&1; then iptables -C INPUT -p udp --dport 56000 -m comment --comment MAXTUNNEL_MANAGED -j ACCEPT 2>/dev/null || iptables -I INPUT -p udp --dport 56000 -m comment --comment MAXTUNNEL_MANAGED -j ACCEPT; iptables -C INPUT -p udp --dport 56001 -m comment --comment MAXTUNNEL_MANAGED -j ACCEPT 2>/dev/null || iptables -I INPUT -p udp --dport 56001 -m comment --comment MAXTUNNEL_MANAGED -j ACCEPT; fi"
+ExecStart=/usr/local/bin/maxtunnel-server -listen 0.0.0.0:56000 -wg-port 56001 -config-dir /etc/maxtunnel ${MAXTUNNEL_ARGS}
+Restart=always
+RestartSec=5
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target

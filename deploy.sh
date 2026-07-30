@@ -2,7 +2,7 @@
 # Usage: ./deploy.sh user@host [/path/to/binary]
 set -euo pipefail
 
-BINARY="${2:-./wdtt-server}"
+BINARY="${2:-./maxtunnel-server}"
 HOST="$1"
 
 if [ ! -f "$BINARY" ]; then
@@ -12,16 +12,16 @@ if [ ! -f "$BINARY" ]; then
 fi
 
 echo "[DEPLOY] Uploading $BINARY to $HOST..."
-scp "$BINARY" "$HOST:/tmp/wdtt-server"
+scp "$BINARY" "$HOST:/tmp/maxtunnel-server"
 
 echo "[DEPLOY] Installing on $HOST..."
 ssh "$HOST" "
     set -e
-    install -m 0755 /tmp/wdtt-server /usr/local/bin/wdtt-server
+    install -m 0755 /tmp/maxtunnel-server /usr/local/bin/maxtunnel-server
     systemctl daemon-reload
-    systemctl restart wdtt
+    systemctl restart maxtunnel
     sleep 2
-    systemctl status wdtt --no-pager
+    systemctl status maxtunnel --no-pager
 "
 
 echo "[DEPLOY] Done"

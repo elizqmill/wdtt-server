@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	wgIfaceName           = "wdtt0"
+	wgIfaceName           = "maxtunnel0"
 	wgServerAddr          = "10.66.66.1"
 	wgServerCIDR          = wgServerAddr + "/24"
 	defaultInternalWGPort = 56001
